@@ -1,0 +1,86 @@
+<!--
+JS Blocker 5 (http://jsblocker.toggleable.com) - Copyright 2017 Travis Lee Roman
+-->
+
+<noscript id="setup-container">
+	<div id="setup-container">
+		<h1 class="jsb-bold"><%=_('setup.hello')%></h1>
+		<p class="jsb-info"><%=_('setup.intro')%></p>
+
+		<div class="horizontal-divider"></div>
+
+		<ul class="generic-menu-options">
+			<li>
+				<%
+					var setting = UI.Settings.createElementForSetting(Settings.map.importSettings, null, true).addClass('double-column-flex');
+				%><%=setting[0].outerHTML%>
+			</li>
+		</ul>
+
+		<div class="horizontal-divider"></div>
+
+		<h2><%=_('setup.common_settings')%></h2>
+		<ul class="generic-menu-options">
+		<%
+			var genericSettings = ['simplifiedUI', 'largeFont', 'darkMode', 'autoHideWhitelist', 'autoHideBlacklist', 'autoHideNoRule'];
+
+			for (var i = 0; i < genericSettings.length; i++) { %>
+				<li>
+					<%
+						var setting = UI.Settings.createElementForSetting(Settings.map[genericSettings[i]], null, true).addClass('double-column-flex');
+					%><%=setting[0].outerHTML%>
+				</li><%
+			} %>
+			<li>
+				<div class="horizontal-divider horizontal-divider-short horizontal-divider-transparent"></div>
+			</li>
+			<li>
+				<%
+					var setting = UI.Settings.createElementForSetting(Settings.map.baseColor, null, true).addClass('double-column-flex');
+				%><%=setting[0].outerHTML%>
+				<div class="horizontal-divider"></div>
+			</li>
+			<li>
+				<p class="jsb-info"><%=_('setting.blockFirstVisit.description')%></p>
+				<div class="horizontal-divider horizontal-divider-short horizontal-divider-transparent"></div>
+			</li>
+			<li>
+				<%
+					var setting = UI.Settings.createElementForSetting(Settings.map.blockFirstVisit, null, true).addClass('double-column-flex');
+
+					$('.setting-radio-list', setting).addClass('no-indent');
+				%><%=setting[0].outerHTML%>
+				<div class="horizontal-divider"></div>
+			</li>
+		</ul>
+
+		<h2><%=_('view.page.host.kind.popup')%></h2>
+		<ul class="generic-menu-options">
+			<li>
+				<%
+					var setting = UI.Settings.createElementForSetting(Settings.map.alwaysBlock.storeKeySettings.popup, null, true).addClass('double-column-flex');
+				%><%=setting[0].outerHTML%>
+				<div class="horizontal-divider"></div>
+			</li>
+		</ul>
+
+		<h2><%=_('setting.locker')%></h2>
+		<ul class="generic-menu-options">
+			<li>
+				<p class="jsb-info"><%=_('setting.setLockerPassword.description')%></p>
+				<div class="horizontal-divider horizontal-divider-short horizontal-divider-transparent"></div>
+			</li>
+			<li>
+				<%
+					var setting = UI.Settings.createElementForSetting(Settings.map.useLocker, null, true).addClass('double-column-flex');
+				%><%=setting[0].outerHTML%>
+			</li>
+		</ul>
+
+		<div class="horizontal-divider"></div>
+
+		<div class="jsb-align-right">
+			<input type="button" id="mark-setup-complete" value="<%=_('setup.complete')%>" />
+		</div>
+	</div>
+</noscript>

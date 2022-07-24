@@ -1,0 +1,161 @@
+<!--
+JS Blocker 5 (http://jsblocker.toggleable.com) - Copyright 2017 Travis Lee Roman
+-->
+
+<noscript id="rule-container">
+	<div id="rule-toolbar">
+		<div id="rule-domain-search-container">
+			<label for="rule-domain-search" class="jsb-label"><%=_('rules.domains_pages')%>:<q></q>
+			<input type="button" id="rule-domain-hide-all" class="blend-in" value="<%=_('rules.hide_all')%>" /><q></q>
+			<input type="button" id="rule-domain-show-all" class="blend-in" value="<%=_('rules.show_all')%>" />			
+
+			<input type="search" id="rule-domain-search" incremental="incremental" placeholder="<%=_('rules.filter_domain')%>" tabindex="1" />		
+		</div>
+		<div class="horizontal-divider horizontal-divider-short"></div>
+	</div>
+	<div id="rule-views-container" class="ui-view-container">
+		<div id="rule-sort-by-container">
+			<label for="rule-sort-by"><%=_('rule.sort_by')%>:</label><q></q>
+			<div id="rule-sort-by-select-wrapper">
+				<select id="rule-sort-by">
+					<option value="priority"><%=_('rule.sort_by.priority')%></option>
+					<option value="name"><%=_('rule.sort_by.name')%></option>
+				</select><label></label><q></q>
+			</div>
+			<a id="rule-sort-direction" href="javascript:void(0);" data-sortDirection="desc"></a>
+		</div>
+		<div id="rule-views"></div>
+		<p id="rule-views-no-rules" class="jsb-info jsb-centered jsb-embossed"><%=_('rules.no_rules')%></p>
+	</div>
+</noscript>
+
+<noscript id="multi-list-container">
+	<ul class="multi-list-container"></ul>
+</noscript>
+
+<noscript id="multi-list-item">
+	<li class="multi-list-item">
+		<div class="multi-list-item-wrapper" data-listName="<%=self.listName%>" data-editable="<%=self.editable%>">
+			<header data-expander="<%=self.expander%>" class="jsb-light-scrollbars">
+				<h4 class="multi-list-item-header"><%=self.listName._startsWith('$') ? UI.Rules.getFilterListName(self.listName) : _('rules.' + (self.listName === 'active' && globalPage.Rules.snapshotInUse() ? 'snapshot' : self.listName))%></h4>
+			</header>
+			<div class="rule-group-list"></div>
+		</div>
+	</li>
+</noscript>
+
+<noscript id="multi-list-page-item">
+	<li class="multi-list-page-item">
+		<h2 class="jsb-light-scrollbars"><%=_('view.page.header.' + (self.isFrame ? 'frame' : 'top'))%> − <%=decodeURIComponent(self.location)._escapeHTML()%></h2>
+		<div class="multi-list-page-item-rules"></div>
+	</li>
+</noscript>
+
+<noscript id="multi-list-resource-item">
+	<li class="multi-list-page-item">
+		<h2 class="jsb-light-scrollbars"><%=_('view.page.header.via_' + (self.isFrame ? 'frame' : 'top'))%> − <%=decodeURIComponent(self.fullSource)._escapeHTML()%></h2>
+		<div class="multi-list-page-item-rules"></div>
+	</li>
+</noscript>
+
+<noscript id="rule-group-type">
+	<div class="rule-group-type-wrapper" data-type="<%=self.type%>" data-editable="<%=self.editable%>">
+		<header data-expander="<%=self.expander%>"  class="jsb-light-scrollbars">
+			<h4 class="rule-group-type-header"><%=_('rules.type.' + self.type)%></h4>
+		</header>
+		<ul class="rule-group-type"></ul>
+	</div>
+</noscript>
+
+<noscript id="domain-list-item">
+	<li>
+		<div class="rule-group-domain-wrapper" data-domain="<%=self.domain._entityQuotes()%>" data-editable="<%=self.editable%>">
+			<header data-expander="<%=self.expander%>" class="jsb-light-scrollbars">
+				<h4 class="rule-group-domain-header"><%=(self.domain === '*' ? _('rules.all_domains') : self.domain)._escapeHTML()%></h4>
+			</header>
+			<ul class="rule-group-domain"></ul>
+		</div>
+	</li>
+</noscript>
+
+<noscript id="kind-list-item">
+	<li>
+		<div class="rule-group-kind-wrapper" data-kind="<%=self.kind%>" data-editable="<%=self.editable%>">
+			<header data-expander="<%=self.expander%>" class="jsb-light-scrollbars">
+				<h4 class="rule-group-kind-header"><%=_('view.page.host.kind.' + self.kind)%></h4>
+			</header>
+			<ul class="rule-group-kind"></ul>
+		</div>
+	</li>
+</noscript>
+
+<noscript id="rule-list-item">
+	<li class="rule-item-container" data-rule="<%=self.rule._entityQuotes()%>" data-action="<%=self.ruleInfo.action%>" data-editable="<%=self.editable%>">
+		<div class="rule-item">
+			<div class="rule-item-bubble" data-action="<%=self.ruleInfo.action%>"><%=window.globalSetting.debugMode ? self.ruleInfo.action : ''%></div>
+			<div class="rule-item-rule jsb-light-scrollbars" data-regexp="<%=self.ruleInfo.regexp ? '1' : '0'%>">
+				<%
+					var protocols = "",
+							humanString = "rules.list.",
+							isHiding = self.kind._contains("hide:"),
+							isAllowing = !!(self.ruleInfo.action % 2),
+							ruleParts = self.ruleInfo.regexp ? { domain: self.rule } : globalPage.Rules.partsForRule(self.rule),
+							domain = ruleParts.domain === '*' ? 'all domains' : ruleParts.domain,
+							originalDomain = domain;
+
+					if (!self.ruleInfo.regexp) {
+						if (ruleParts.protocols) {
+							protocols = Object.keys(ruleParts.protocols).map(function (protocol) {
+								return _('rules.protocol.' + protocol);
+							}).join(', ');
+						}
+
+						if (self.kind._contains('user_script')) {
+							try {
+								domain = globalPage.UserScript.getAttribute(domain, 'meta').name;
+							} catch (error) {
+								domain = 'DELETED - ' + domain;
+							}
+						} else if (self.kind._contains('special')) {
+							domain = _('special.' + domain + '.' + (isAllowing ? 'allowed' : 'blocked'), [globalPage.Special.enabled[domain] ? globalPage.Special.enabled[domain].value : '']);
+
+							if (isHiding)
+								domain += '/' + _('special.' + originalDomain + '.' + (!isAllowing ? 'allowed' : 'blocked'), [globalPage.Special.enabled[originalDomain] ? globalPage.Special.enabled[originalDomain].value : '']);
+						}
+					}
+
+					if (isHiding) {
+						humanString += isAllowing ? 'show' : 'hide';
+					} else if (self.kind._contains('special')) {
+						humanString += 'special';
+					} else if (self.kind._contains('user_script')) {
+						humanString += isAllowing ? 'run' : 'dont_run';
+					} else {
+						humanString += isAllowing ? 'allow' : 'block';
+					}
+
+					if (self.ruleInfo.thirdParty)
+						humanString += '.thirdParty';
+
+					if (self.ruleInfo.regexp) {
+						humanString += '.matching';
+					} else if (self.kind._contains('special') || self.kind._contains('user_script')) {
+						humanString += '';
+					} else if (self.kind._contains('disable')) {
+						humanString += '.jsb';
+					} else if (domain._startsWith('.')) {
+						domain = domain.substr(1);
+
+						humanString += '.within';
+					} else {
+						humanString += (self.kind._contains('xhr') || self.kind === 'popup') ? '.to' : '.from';
+					} %>
+				<%=_(humanString, [protocols, domain._escapeHTML()])%>
+			</div>
+			<div class="rule-item-action-container"></div>
+		</div>
+		<% if (self.ruleInfo.exceptionHosts) { %>
+			<div class="rule-item-exception-hosts"><%=_('rules.list.except_on', [self.ruleInfo.exceptionHosts.join(', ')])%></div><%
+		} %>
+	</li>
+</noscript>

@@ -1,0 +1,680 @@
+/*
+JS Blocker 5 (http://jsblocker.toggleable.com) - Copyright 2017 Travis Lee Roman
+*/
+
+.shared-after(@important) {
+	.jsb-element,
+	.jsb-injected-element {
+		&.jsb-no-select {
+			&,
+			* {
+				-wbkit-user-select: none !important;
+			}
+		}
+
+		&.jsb-drag-cursor {
+			&[data-cursor="col-resize"] {
+				&,
+				* {
+					cursor: col-resize !important;
+				}
+			}
+		}
+
+		.jsb- {
+			&clear-float {
+				clear: both @important;
+				line-height: 0 @important;
+				height: 0 @important;
+			}
+
+			&hidden {
+				display: none @important;
+			}
+
+			&indented {
+				margin-left: 7px @important;
+			}
+
+			&bold {
+				font-weight: bold @important;
+			}
+
+			&label {
+				color: #6f6f6f @important;
+			}
+
+			&centered {
+				text-align: center @important;
+			}
+
+			&info {
+				text-indent: 0 @important;
+				padding: 1px 0 @important;
+				margin: 4px 0 5px @important;
+				overflow: auto @important;
+				font-weight: normal @important;
+			}
+
+			&error {
+				color: lighten(@blockColor, 15%) @important;
+			}
+
+			&nowrap {
+				overflow: auto @important;
+				white-space: nowrap @important;
+				word-wrap: normal @important;
+			}
+
+			&readable {
+				max-width: 310px;
+			}
+
+			&embossed {
+				color: rgba(0, 0, 0, 0.3);
+				font-weight: 500;
+				text-shadow: 0 1px 1px darken(#fff, @darknessLevel), 0 0 0 rgba(0, 0, 0, 0.3), 0 0 1px darken(#fff, @darknessLevel);
+
+				& when (@darkMode) {
+					color: rgba(255, 255, 255, 0.3);
+				}
+			}
+
+			&smaller {
+				font-size: 0.9em;
+			}
+
+			&hidden,
+			&hidden *,
+			&no-animations,
+			&no-animations * {
+				-webkit-transition-duration: 0.001s !important;
+				-webkit-animation: none !important;
+			}
+
+			&align-right {
+				text-align: right @important;
+			}
+
+			&disabled {
+				opacity: 0.4 @important;
+				pointer-events: none @important;
+			}
+
+			&light-scrollbars {
+				&:hover,
+				&:focus {
+					&::-webkit-scrollbar-thumb {
+						background: rgba(0, 0, 0, 0.3);
+
+						& when (@darkMode) {
+							background: rgba(255, 255, 255, 0.2);
+						}
+					}
+				}
+				
+				&::-webkit-scrollbar {
+					height: 3px;
+
+					&-track {
+						background: transparent;
+					}
+
+					&-thumb {
+						background: rgba(0, 0, 0, 0.15);
+
+						& when (@darkMode) {
+							background: rgba(255, 255, 255, 0.1);
+						}
+
+						&:hover {
+							background: rgba(0, 0, 0, 0.5);
+
+							& when (@darkMode) {
+								background: rgba(255, 255, 255, 0.4);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		.generic-menu {
+			&-options li {
+				&:not(:last-child) {
+					margin-bottom: 5px;
+				}
+
+				ul:not(.no-indent) {
+					margin-left: 18px;
+				}
+			}
+			
+			&-menu li input:last-of-type {
+				margin-right: 0
+			}
+		}
+
+		.double-column-flex {
+			display: -webkit-flex;
+			width: 100%;
+			-webkit-align-items: baseline;
+			-webkit-justify-content: center;
+
+			&-left {
+				-webkit-flex: 0 1 193px;
+				text-align: right;
+				padding-right: 0;
+			}
+
+			&-right {
+				-webkit-flex: 0 1 270px;
+				padding-left: 3px;
+
+				select {
+					width: 200px;
+				}
+
+				.select-custom-wrapper {
+					width: 200px;
+
+					select {
+						width: 15px;
+					}
+				}
+
+			}
+
+			&-full {
+				-webkit-flex: 0 0 410px;
+				padding-left: 40px;
+
+				.jsb-info {
+					line-height: 1.4;
+				}
+			}
+		}
+
+		.object-as-list {
+			.object-as-list {
+				margin-left: 10px;
+			}
+			
+			.object-key- {
+				&name {
+					font-weight: 500;
+				}
+			}
+
+			pre {
+				display: inline-block;
+			}
+		}
+
+		pre {
+			font-size: 8pt;
+
+			.jsb-large-font& {
+				font-size: 9pt;
+			}
+
+			&,
+			* {
+				tab-size: 2;
+				white-space: pre;
+				text-wrap: normal;
+				font-family: "Menlo-Regular", Courier, monospace @important;
+			}
+		}
+
+		ul,
+		ol {
+			list-style: none;
+
+			li.dividing-border {
+				border-bottom: 1px solid darken(#f3f3f3, @darknessLevel);
+			}
+		}
+
+		ol {
+			list-style-type: decimal @important;
+			margin-left: 20px @important;
+		}
+
+		h1,
+		h2,
+		h3,
+		h4 {
+			color: #5a668c @important;
+			font-weight: normal @important;
+			margin: 0 7px 10px @important;
+
+			&.mini-margin {
+				margin-bottom: 7px @important;
+			}
+
+			& when (@darkMode) {
+				color: lighten(#5a668c, 13%) @important;
+			}
+		}
+
+		h1 {
+			font-size: 130% @important;
+		}
+
+		h2 {
+			font-size: 125% @important;
+		}
+
+		h3 {
+			font-size: 120% @important;
+		}
+
+		strong {
+			font-weight: 500 @important;
+		}
+
+		b {
+			font-weight: bold @important;
+		}
+
+		q {
+			display: inline-block @important; 
+			width: 3px @important;
+			white-space: nowrap @important;
+
+			&:before,
+			&:after {
+				content: none @important;
+			}
+		}
+
+		mark {
+			position: relative;
+			padding: 2px;
+			margin-top: -2px;
+			left: -2px;
+			display: inline-block;
+			background: yellow;
+			color: #000;
+			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+			border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+			border-radius: 2px;
+		}
+
+		.select-custom-options li {
+			&:before,
+			.jsb-label:before {
+				content: '✓ ';
+				opacity: 0;
+			}
+
+			&,
+			* {
+				white-space: nowrap;
+			}
+
+			.jsb-label {
+				margin-left: 2px;
+			}
+		}
+
+		a {
+			text-decoration: underline @important;
+		}
+
+		a,
+		.select-custom-options li {
+			color: darken(@baseColor, 7%) @important;
+
+			& when (@darkMode) {
+				color: lighten(@baseColor, 12%) @important;
+			}
+
+			&:active {
+				color: darken(@baseColor, 15%) @important;
+
+				& when (@darkMode) {
+					color: lighten(@baseColor, 7%) @important;
+				}
+			}
+
+			&.no-underline {
+				text-decoration: none @important;
+			}
+
+			&.select-custom-selected:before {
+				opacity: 1 @important;
+			}
+		}
+
+		*[data-expander] {
+			position: relative;
+			margin-top: 5px;
+			padding-bottom: 3px;
+
+			+ * {
+				overflow: hidden;
+			}
+
+			&:not(.group-collapsed) + * {
+				opacity: 1;
+			}
+
+			> * {
+				display: inline;
+			}
+
+			&:not(.keep-expanded) {
+				> * {
+					.header-expander-label {
+						display: inline-block;
+						margin-left: 7px;
+						font-weight: 500;
+						opacity: 0;
+						cursor: default;
+
+						&:after {
+							content: attr(data-i18n-hide);
+						}
+					}
+				}
+
+				&:hover,
+				&.show-label {
+					> * {
+						.header-expander-label {
+							opacity: 1;
+
+							&:active {
+								opacity: 1;
+								text-shadow: 0 0 1px rgba(0, 0, 0, 0.6);
+
+								& when (@darkMode) {
+									text-shadow: 0 1px 2px #000, 0 -1px 2px #000, 1px 0 2px #000, -1px 0 2px #000;
+								}
+							}
+						}
+					}
+				}
+
+				&.show-label > * .header-expander-label {
+					opacity: 0.83;
+				}
+
+				&.group-collapsed + * {
+					display: none;
+				}
+
+				&.group-collapsed,
+				&.group-collapsing {
+					> * {
+						.header-expander-label:after {
+							content: attr(data-i18n-show);
+						}
+					}
+				}
+			}
+		}
+
+		.split-view {
+			position: relative;
+			display: -webkit-flex;
+			width: 100%;
+			-webkit-align-items: stretch;
+			box-sizing: border-box;
+
+			&.split-view-full-height {
+				height: 100%;
+			}
+
+			&.no-animation * {
+				-webkit-transition-duration: 0 !important;
+			}
+
+			&-divider {
+				position: absolute;
+				left: 50%;
+				width: 5px;
+				margin-left: -3px;
+				height: 100%;
+				cursor: col-resize;
+				z-index: 6;
+
+				&.dragging {
+					+ .split-view-left, {
+						&,
+						& + .split-view-right {
+							> *:not(.split-view-will-collapse) {
+								-webkit-transition: left unit(0.45 * @speedMultiplier, s) ease-in-out, right unit(0.45 * @speedMultiplier, s) ease-in-out;
+
+								&,
+								* {
+									white-space: nowrap;
+								}
+							}
+						}
+					}
+				}
+
+				&:not(.dragging) {
+					+ .split-view-left {
+						&,
+						& + .split-view-right {
+							-webkit-transition: all unit(0.2 * @speedMultiplier, s) ease-out; 
+						}
+					}
+				}
+			}
+
+			&-left,
+			&-right {
+				position: relative;
+				overflow-y: auto;
+				overflow-x: hidden;
+				box-sizing: border-box;
+
+				.split-view-will-collapse {
+					display: block;
+					pointer-events: none;
+					z-index: 5;
+					position: absolute;
+					top: 0;
+					left: 0;
+					width: 100%;
+					height: 100%;
+					text-align: center;
+					opacity: 0;
+					-webkit-transition: opacity unit(0.45 * @speedMultiplier, s) ease-out;
+					background-color: fade(@baseColor, 15%);
+				}
+
+				> *:not(.split-view-will-collapse) {
+					position: relative;
+					opacity: 1;
+					overflow: hidden;
+				}
+
+				&.collapsed {
+					.split-view-will-collapse {
+						background-color: fade(@baseColor, 35%);
+					}
+
+					> *:not(.split-view-will-collapse) {
+						height: 0;
+						overflow: hidden;
+					}
+				}
+
+				&.collapses {
+					.split-view-will-collapse {				
+						opacity: 1;
+						pointer-events: all;				
+					}
+				}
+			}
+
+			&-left {
+				-webkit-flex: 0 0 50%;
+				padding-right: 1px;
+				border-right: 1px solid darken(#ddd, @darknessLevel);
+
+				.split-view-will-collapse {
+					left: -1px;
+				}
+
+				> *:not(.split-view-will-collapse) {
+					right: 0;
+				}
+
+				&.collapses > *:not(.split-view-will-collapse) {
+					right: 200%;
+				}
+			}
+
+			&-right {
+				-webkit-flex: 1 1 auto;
+				padding-left: 1px;
+				border-left: 1px solid darken(#fff, @darknessLevel);
+				background: darken(#fbfbfb, @darknessLevel);
+
+				> *:not(.split-view-will-collapse) {
+					left: 0;
+				}
+
+				&.collapses > *:not(.split-view-will-collapse) {
+					left: 200%;
+				}
+			}
+		}
+
+		.paginator-wrapper {
+			.paginator-pages-container > *:not(.paginator-active) {
+				display: none;
+			}
+
+			.paginator-controller {
+				display: -webkit-flex;
+				-webkit-align-items: center;
+				width: 100%;
+				margin-bottom: 3px;
+				text-align: center;
+
+				&.jsb-hidden {
+					display: none;
+				}
+
+				&:last-child {
+					margin-top: 3px;
+				}
+
+				input {
+					&.jsb-hidden {
+						display: inline;
+						opacity: 0.15;
+						pointer-events: none;
+					}
+
+					font-size: smaller;
+					padding: 2px 10px;
+					-webkit-font-smoothing: antialiased;
+					border-top-left-radius: 0;
+					border-bottom-left-radius: 0;
+					color: darken(@baseColor, 13%);
+
+					.jsb-large-font& {
+						padding: 3px 10px 1px;
+					}
+				}
+
+				&-count {
+					-webkit-flex: 1 0 1px;
+					text-align: right;
+					padding-top: 1px;
+
+					*,
+					& {
+						color: #777;
+					}
+				}
+
+				&-buttons {
+					-webkit-flex: 0 0 80px;
+					text-align: center;
+				}
+
+				&-filler {
+					-webkit-flex: 1 0 1px;
+				}
+
+				&-previous {
+					margin-right: -1px;
+					-webkit-transform: scale(-1, 1);
+				}
+			}
+		}
+
+		.progress-bar-container {
+			position: relative;
+
+			.progress-bar-back {
+				width: 240px;
+				height: 6px;	
+				box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1), inset 1px 0 0 rgba(0, 0, 0, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(0, 0, 0, 0.1);
+				border-radius: 8px;
+				background: rgba(0, 0, 0, 0.1);
+				margin: 0 auto;
+
+				& when (@darkMode) {
+					border-color: rgba(0, 0, 0, 0.5);
+					background: rgba(0, 0, 0, 0.5);
+				}
+
+				.progress-bar-progress {
+					overflow: hidden;
+					position: relative;
+					height: 6px;
+					min-width: 6px;
+					background: lighten(@baseColor, 7%);
+					box-shadow: inset -1px 0 0 darken(@baseColor, 10%), inset 1px 0 0 darken(@baseColor, 10%), inset 0 -1px 0 darken(@baseColor, 10%), inset 0 1px 0 darken(@baseColor, 10%);
+					border-radius: 8px;
+					-webkit-transition: width unit(0.5 * @speedMultiplier, s) ease-out;
+				}
+			}
+
+			.progress-bar-time-remaining {
+				margin-top: 10px;
+				text-align: center;
+				line-height: 1;
+				margin-bottom: 0;
+			}
+		}
+
+		.progress-bar-shine {
+			position: relative;
+			height: 100%;
+			left: -300px;
+			width: 150px;
+			background: -webkit-linear-gradient(left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0));
+			-webkit-animation: progress-bar-shine 2s ease-in-out 1s infinite; 
+		}
+
+		#container {
+			div,
+			#universal-progress-bar-container {
+				&,
+				#universal-progress-bar {
+					&.progress-bar-indeterminate {
+						.progress-bar-shine {
+							display: none;
+						}
+
+						background: lighten(@baseColor, 7%) -webkit-linear-gradient(left, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.6) 50%, rgba(255, 255, 255, 0) 100%) repeat;
+						background-size: 300px 300px;
+						-webkit-animation: progress-bar-indeterminate 2.5s linear 0 infinite; 
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,45 @@
+<!--
+JS Blocker 5 (http://jsblocker.toggleable.com) - Copyright 2017 Travis Lee Roman
+-->
+
+<noscript id="item-info">
+	<%
+		if (self.kind === 'special') {
+			var localizationKey = 'special.' + self.source + (self.isAllowed ? '.blocked' : '.allowed'),
+					specialData = (Settings.getItem('enabledSpecials', self.source) || '*').toString(),
+					specialHelp = Strings.localizationExist(localizationKey) ? _(localizationKey, [specialData._escapeHTML()]) : null;
+
+			if (specialHelp) { %>
+				<p class="jsb-info"><%=_(self.isAllowed ? 'when_special_blocked' : 'when_special_allowed', [specialHelp])%></p>
+				<div class="horizontal-divider"></div><%
+			}
+		}
+	%>
+	<% if (self.kind === 'user_script') { %>
+		<input type="button" id="item-info-show-user-script" value="<%=_('view.page.item.info.show_user_script')%>" /><q></q><%
+	} %>
+	<% if (self.action >= 0 && self.action <= 5) { %>
+		<input type="button" id="item-info-show-rules" value="<%=_('view.page.item.info.show_rules')%>" /><%
+	} %>
+</noscript>
+
+<noscript id="resource-list">
+	<ul id="resource-list">
+	<% for (var i = 0; i < self.items.length; i++) { %>
+		<li>
+			<% if (self.items[i].kind === 'script' || self.items[i].kind === 'image') { %>
+				<input type="button" class="show-resource-source blend-in" value="<%=_('expander.show')%>" data-kind="<%=self.items[i].kind%>" data-url="<%=self.items[i].fullSource._entityQuotes()%>" /><q></q><%
+			} %><p class="jsb-nowrap jsb-light-scrollbars"><span class="jsb-nowrap"><%=(self.items[i].kind._startsWith('xhr_') ? self.items[i].baseSource : self.items[i].fullSource)._escapeHTML()%></span>
+			</p>
+			<% if (self.items[i].meta) { %>
+				<div class="jsb-indented">
+					<div class="jsb-indented"><%=self.items[i].meta._toHTMLList()[0].outerHTML%></div>
+				</div><%
+			} %>
+			<% if (i < self.items.length - 1) { %>
+				<div class="horizontal-divider"></div><%
+			} %>
+		</li><%
+	} %>
+	</ul>
+</noscript>

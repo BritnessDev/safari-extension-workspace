@@ -1,0 +1,114 @@
+/*
+JS Blocker 5 (http://jsblocker.toggleable.com) - Copyright 2017 Travis Lee Roman
+*/
+
+#view-container {
+	#main-views[data-activeview="#main-views-help"] {
+		overflow: hidden;
+		margin-top: 0;
+		position: relative;
+	}
+
+	#main-views-help,
+	#help-views-faq {
+		width: 100%;
+		-webkit-flex-direction: column;
+		-webkit-align-items: stretch;
+
+		&.active-view {
+			position: absolute;
+			height: 100%;
+			display: -webkit-flex;
+		}
+	}
+
+	#main-views-help {
+		.view-toolbar {
+			padding-top: 2px;
+			border-top: 1px solid darken(#fff, @darknessLevel);
+			-webkit-flex: 0 0 25px;
+			border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+			background: darken(rgb(250, 250, 250), @darknessLevel);
+
+			& when (@darkMode) {
+				border-bottom-color: rgba(0, 0, 0, 0.4);
+			}
+
+			.view-switcher-container {
+				position: absolute;
+
+				.view-switcher {
+					margin-top: 1px;
+
+					li:not(.view-switcher-hidden),
+					li.view-switcher-hidden.active-view {
+						width: 80px;
+					}
+				}
+			}
+		}
+
+		#help-faq-toolbar {
+			margin-top: 0;
+		}
+
+		#help-views-container,
+		#help-faq-views-container {
+			position: relative;
+			-webkit-flex: 1 1 100%;
+			overflow-y: scroll;
+			overflow-x: auto;
+			margin-top: 1px;
+		}
+
+		#help-views-container[data-activeview="#help-views-faq"] {
+			overflow: hidden;
+			margin-top: 0;
+			position: relative;
+		}
+
+		#help-views-container {
+			.help-content {
+				padding: 10px;
+				width: 470px;
+				margin: 0 auto;
+
+				&#help-contact li {
+					padding-bottom: 5px;
+				}
+
+				.help-questions {
+					margin-top: 15px;
+
+					li {
+						margin-bottom: 9px;
+						padding-bottom: 5px;
+
+						&:not(:last-child) {
+							box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+
+							& when (@darkMode) {
+								box-shadow: 0 1px 0 rgba(0, 0, 0, 0.45);
+							}
+						}
+					}
+
+					h4 {
+						margin-left: 0;
+						color: darken(@baseColor, 13%);
+						font-weight: 500;
+
+						& when (@darkMode) {
+							color: lighten(@baseColor, 20%);
+						}
+					}
+
+					.help-question-answer {
+						margin-left: 10px;
+						padding-top: 5px;
+					}
+				}
+			}
+		}
+	}
+}

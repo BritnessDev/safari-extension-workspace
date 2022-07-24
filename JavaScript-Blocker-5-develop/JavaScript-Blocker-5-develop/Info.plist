@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Author</key>
+	<string>Travis Roman</string>
+	<key>Builder Version</key>
+	<string>534.57.2</string>
+	<key>CFBundleDisplayName</key>
+	<string>JS Blocker 5</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.toggleable.JavaScriptBlocker5</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleShortVersionString</key>
+	<string>5.3.2</string>
+	<key>CFBundleVersion</key>
+	<string>190116</string>
+	<key>Chrome</key>
+	<dict>
+		<key>Database Quota</key>
+		<real>0.0</real>
+		<key>Global Page</key>
+		<string>html/global.html</string>
+		<key>Popovers</key>
+		<array>
+			<dict>
+				<key>Filename</key>
+				<string>html/popover.html</string>
+				<key>Height</key>
+				<real>10</real>
+				<key>Identifier</key>
+				<string>manager</string>
+				<key>Width</key>
+				<real>100</real>
+			</dict>
+		</array>
+		<key>Toolbar Items</key>
+		<array>
+			<dict>
+				<key>Identifier</key>
+				<string>popoverTrigger</string>
+				<key>Image</key>
+				<string>image/toolbar.png</string>
+				<key>Label</key>
+				<string>JS Blocker 5</string>
+				<key>Palette Label</key>
+				<string>JS Blocker 5</string>
+				<key>Popover</key>
+				<string></string>
+				<key>Tool Tip</key>
+				<string>JS Blocker 5</string>
+			</dict>
+		</array>
+	</dict>
+	<key>Content</key>
+	<dict>
+		<key>Scripts</key>
+		<dict>
+			<key>Start</key>
+			<array>
+				<string>js/injected/compiled.js</string>
+			</array>
+		</dict>
+		<key>Stylesheets</key>
+		<array>
+			<string>css/injected.css</string>
+		</array>
+	</dict>
+	<key>Description</key>
+	<string>Helps to minimize tracking, protect your privacy, and speed up browsing.</string>
+	<key>DeveloperIdentifier</key>
+	<string>6S8J5HV3H4</string>
+	<key>ExtensionInfoDictionaryVersion</key>
+	<string>1.0</string>
+	<key>Permissions</key>
+	<dict>
+		<key>Website Access</key>
+		<dict>
+			<key>Include Secure Pages</key>
+			<true/>
+			<key>Level</key>
+			<string>All</string>
+		</dict>
+	</dict>
+	<key>Update Manifest URL</key>
+	<string>https://hero.toggleable.com/jsblocker/download/extupdates.plist</string>
+	<key>Website</key>
+	<string>http://jsblocker.toggleable.com/</string>
+</dict>
+</plist>

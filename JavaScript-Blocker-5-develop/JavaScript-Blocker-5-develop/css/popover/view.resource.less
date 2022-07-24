@@ -1,0 +1,22 @@
+/*
+JS Blocker 5 (http://jsblocker.toggleable.com) - Copyright 2017 Travis Lee Roman
+*/
+
+#view-container {
+	#main-views[data-activeview="#main-views-resource-content"] {
+		overflow-x: auto;
+
+		#main-views-resource-content {
+			#resource-image {
+				text-align: center;
+				padding: 3px;
+
+				&.loading:before {
+					content: attr(data-i18n-loading);
+					display: block;
+					margin-bottom: 3px;
+				}
+			}
+		}
+	}
+}

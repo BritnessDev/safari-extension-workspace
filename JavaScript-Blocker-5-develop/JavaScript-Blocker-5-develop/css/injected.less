@@ -1,0 +1,300 @@
+/*
+JS Blocker 5 (http://jsblocker.toggleable.com) - Copyright 2017 Travis Lee Roman
+*/
+
+@importantDeclaration: !important;
+
+@import "shared-before.less";
+
+.shared-before(@importantDeclaration);
+
+.jsb-injected-element {
+	&#jsb-notification-container {
+		position: fixed !important;
+		top: 0 !important;
+		right: 0 !important;
+		z-index: 9999999999 !important;
+
+		.jsb-notification {
+			position: fixed !important;
+			top: 0;
+			width: 356px !important;
+			border: none !important;
+			padding-bottom: 4px !important;
+			overflow: visible !important;
+			right: -356px;
+			margin-right: 8px !important;
+			-webkit-transition: right 0.3s ease-in-out, top 0.3s ease-in-out, opacity 0.3s ease-out, -webkit-transform 0.3s ease-in !important;
+			background: none !important;
+
+			&.jsb-notification- {
+				&warped {
+					-webkit-transform: perspective(500px) rotateX(-75deg);
+				}
+
+				&stacked .jsb-notification-content {
+					box-shadow: 0 0px 10px rgba(0, 0, 0, 0.15) !important;
+				}
+
+				&forwarded:not(.jsb-notification-entering) .jsb-notification-content {
+					background: -webkit-linear-gradient(top, #fafafa, #f6f6f6) !important;
+					box-shadow: 0 0px 25px rgba(0, 0, 0, 0.4) !important;
+				}
+			}
+
+			.jsb-notification- {
+				&toggle-layering {
+					position: absolute !important;
+					top: 0px !important;
+					left: 0 !important;
+					height: 30px !important;
+					width: 255px !important;
+					z-index: 1 !important;
+				}
+
+				&content {
+					max-height: 300px !important;
+					background: -webkit-linear-gradient(top, #ffffff, #fafafa) !important;
+					background-size: auto auto !important;
+					margin: 10px !important;
+					padding: 7px 10px !important;
+					z-index: 0 !important;
+					border-radius: 6px !important;
+					box-shadow: 0 0px 10px rgba(0, 0, 0, 0.3) !important;
+					overflow: hidden !important;
+					opacity: 1 !important;
+					position: relative !important;
+					right: 0;
+				}
+
+				&close-container {
+					float: right !important;
+					min-width: 92px !important;
+					margin-top: -7px !important;
+					margin-right: -10px !important;
+					margin-bottom: 1px !important;
+					margin-left: 5px !important;
+
+					.jsb-notification- {
+						&close-wrapper {
+							position: relative !important;
+							border-left: 1px solid rgba(0, 0, 0, 0.065) !important;
+							border-bottom: 1px solid rgba(0, 0, 0, 0.065) !important;
+							border-radius: 0 !important;
+							border-top-right-radius: 6px !important;
+							overflow: hidden !important;
+
+							&:last-child {
+								border-bottom-left-radius: 6px !important;
+							}
+
+							.jsb-has-option {
+								position: absolute !important;
+								left: 3px !important;
+								top: 4px !important;
+								opacity: 0.25 !important;
+								-webkit-user-select: none !important;
+								cursor: pointer !important;
+								pointer-events: none !important;
+								z-index: 3 !important;
+							}
+						}
+						
+						&close-option {
+							list-style-type: none !important;
+							-webkit-transition: height 0.3s ease-in-out;
+
+							li input {
+								width: 100% !important;
+								border-top: 1px solid rgba(0, 0, 0, 0.065) !important;
+							}
+						}
+
+						&close {
+							position: relative !important;
+							width: 100% !important;
+							z-index: 2 !important;
+							border: none !important;
+							border-radius: 0 !important;
+							background: none !important;
+							padding: 5px 5px !important;
+							margin: 0 !important;
+							color: #222 !important;
+							box-shadow: none !important;
+
+							&:active {
+								background: rgba(245, 245, 245, 0.98) !important;
+								border-color: rgba(0, 0, 0, 0.065) !important;
+							}
+
+							.color-allow;
+							.color-block;
+						}
+					}
+				}
+			
+				&title {
+					font-weight: bold !important;
+					margin-top: 0 !important;
+					line-height: 1 !important;
+					margin-bottom: 8px !important;
+					overflow: hidden !important;
+					text-overflow: ellipsis !important;
+				}
+
+				&sub-title {
+					margin-top: -5px !important;
+					color: #888 !important;
+					font-weight: normal !important;
+					margin-bottom: 8px !important;
+					overflow: hidden !important;
+					text-overflow: ellipsis !important;
+				}
+
+				&body {
+					margin-top: 9px !important;
+
+					.jsb-info {
+						max-height: 100px !important;
+					}
+				}
+			}
+
+			.jsb-xhr- {
+				&query- {
+					&param {
+						font-weight: bold !important;
+					}
+
+					&param-modify {
+						width: 85px !important;
+						text-align: right !important;
+						margin-bottom: 1px !important;
+					}
+
+					&value-modify {
+						width: 190px !important;
+					}
+				}
+
+				&part-label {
+					margin-bottom: 2px !important;
+				}
+			}
+		}
+	}
+
+	&.jsb-element-placeholder {
+		position: relative !important;
+		padding: 2px 0 !important;
+		background: -webkit-linear-gradient(top, #f5f5f5, #e9e9e9) !important;
+		box-shadow: inset 0 0 1px #000 !important;
+		opacity: 0.7 !important;
+		-webkit-user-select: none !important;
+		cursor: default !important;
+		min-width: 90px !important;
+		min-height: 20px !important;
+		overflow: hidden !important;
+		height: inherit !important;
+		width: inherit !important;
+
+		*,
+		& {
+			-webkit-transition: opacity 0.15s ease-in-out !important;
+			white-space: nowrap !important; /* not default */
+			border: none !important;
+			box-shadow: none !important;
+			box-sizing: content-box !important;
+			/* This is incorrectly computed as rect(0px,0px,0px,0px) on video elements */
+			/* clip: auto !important; */
+			cursor: default !important; /* not default */
+			outline: none !important;
+			padding: 0 !important;
+			pointer-events: auto !important;
+			zoom: normal !important;
+		}
+
+		* {
+			width: auto !important;
+			height: auto !important;
+		}
+
+		.jsb-element-placeholder-container {
+			-webkit-font-smoothing: subpixel-antialiased !important;
+			-webkit-marquee-style: none !important;
+			-webkit-text-stroke-width: 0 !important;
+			border-radius: 0 !important;
+			bottom: auto !important;
+			clear: none !important;
+			direction: ltr !important;
+			float: none !important;
+			font-stretch: normal !important;
+			font-style: normal !important;
+			font-variant: normal !important;
+			font-weight: normal !important;
+			left: auto !important;
+			letter-spacing: normal !important;
+			line-height: normal !important;
+			margin: 0 !important;
+			overflow: visible !important;
+			right: auto !important;
+			text-align: left !important;
+			text-decoration: none !important;
+			text-indent: 0 !important;
+			text-overflow: clip !important;
+			text-rendering: optimizelegibility !important; /* not default */
+			text-shadow: none !important;
+			text-transform: none !important;
+			top: auto !important;
+			visibility: inherit !important; /* not default */
+			white-space: nowrap !important; /* not default */
+			word-spacing: normal !important;
+			word-wrap: normal !important;
+			z-index: auto !important;
+			position: relative !important;
+			display: -webkit-flex !important;
+			-webkit-align-items: center !important;
+			-webkit-flex-direction: row !important;
+			-webkit-justify-content: center !important;
+			-webkit-transition-property: none !important;
+			background-attachment: scroll !important;
+			background-clip: padding-box !important;
+			background-color: transparent !important;
+			background-origin: padding-box !important;
+			background-position: center !important;
+			background-repeat: no-repeat !important;
+			background-size: contain !important;
+			border: 1px solid rgb(180, 180, 180) !important;
+			box-sizing: border-box !important;
+			height: inherit !important;
+			min-height: inherit !important;
+			min-width: inherit !important;
+			max-height: inherit !important;
+			max-width: inherit !important;
+			width: inherit !important;
+		}
+
+		.jsb-element-placeholder-kind {
+			font-size: 22px !important;
+			color: rgba(0, 0, 0, 0.25) !important;
+			letter-spacing: 1px !important;
+			text-shadow: 0 1px 1px #fff, 0 0 0 rgba(0, 0, 0, 0.2), 0 0 1px #fff !important;
+			text-align: center !important;
+			padding: 5px 6px !important;
+			border-radius: 10px !important;
+			border: 3px double rgb(190, 190, 190) !important;
+		}
+
+		&:hover {
+			opacity: 1 !important;
+		}
+
+		&:active {
+			background: #e9e9e9 !important;
+		}
+	}
+}
+
+@import "shared-after.less";
+
+.shared-after(@importantDeclaration);

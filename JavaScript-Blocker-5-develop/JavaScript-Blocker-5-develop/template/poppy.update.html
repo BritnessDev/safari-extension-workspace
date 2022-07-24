@@ -1,0 +1,55 @@
+<!--
+JS Blocker 5 (http://jsblocker.toggleable.com) - Copyright 2017 Travis Lee Roman
+-->
+
+<noscript id="update-150424">
+	<h3 class="jsb-centered">A Simplified Page Editor</h3>
+
+	<p class="jsb-info jsb-readable">Would you like to use the new simplfiied page editor view? It hides all of the advanced options until you really need them.</p>
+	<ul class="generic-menu-options jsb-readable">
+		<li>
+			<%
+				var setting = UI.Settings.createElementForSetting(Settings.map.useSimplePageEditor, null, true);
+			%><%=setting[0].outerHTML%>
+		</li>
+	</ul>
+</noscript>
+
+<noscript id="update-151027-kind-headers">
+	<h3 class="jsb-centered">Force Click</h3>
+
+	<p class="jsb-info jsb-readable">Force click kind headers to instantly create rules for the items below it.</p>
+</noscript>
+
+<noscript id="update-151027-page-items">
+	<h3 class="jsb-centered">Force Click</h3>
+
+	<p class="jsb-info jsb-readable">Force click a blocked or allowed item to instantly create a rule for it.</p>
+</noscript>
+
+<noscript id="update-151027-host-count">
+	<h3 class="jsb-centered">Force Click</h3>
+
+	<p class="jsb-info jsb-readable">Force click item count to temporarily switch to showing all resource URLs.</p>
+</noscript>
+
+<noscript id="update-160419">
+	<h3 class="jsb-centered">Update 5.1.0</h3>
+
+	<p class="jsb-info jsb-readable">Rules will now be created without switching to the page editor.
+		Just click the items you want to allow or block and the page will automatically reload with the changes you made.</p>
+
+	<div class="horizontal-divider"></div>
+
+	<p class="jsb-info">
+		<%
+			var setting = UI.Settings.createElementForSetting(Settings.map.createRulesOnClick, null, true);
+		%><%=setting[0].outerHTML%>
+	</p>
+</noscript>
+
+<noscript id="update-180526">
+	<h3 class="jsb-centered">Privacy Policy</h3>
+
+	<p class="jsb-info jsb-readable">JS Blocker's privacy policy can be reviewed by navigating to <b>Help > Privacy</b>. <a href="javascript:void(0)" id="go-to-privacy">Go there now.</a></p>
+</noscript>

@@ -1,0 +1,97 @@
+<!--
+JS Blocker 5 (http://jsblocker.toggleable.com) - Copyright 2017 Travis Lee Roman
+-->
+
+<noscript id="injected-element">
+	<div id="<%=self.id || ('jsb-' + Utilities.Token.generate())%>" class="jsb-injected-element <%=Settings.getItem('largeFont') ? 'jsb-large-font' : ''%>"></div>
+</noscript>
+
+<noscript id="recommend-reload">
+	<p class="jsb-info"><%=_('recommend_reload.body')%></p>
+</noscript>
+
+<noscript id="notification">
+	<div class="jsb-notification <%=!globalPage.globalSetting.useAnimations ? 'jsb-no-animations' : ''%>" id="jsb-notification-<%=self.id || Utilities.Token.generate()%>">
+		<div class="jsb-notification-toggle-layering" title="<%=self.title._entityQuotes()%>"></div>
+		<div class="jsb-notification-content">
+			<div class="jsb-notification-close-container"></div>
+			<div class="jsb-notification-title jsb-info"><%=self.title%></div>
+			<% if (self.subTitle) { %>
+				<div class="jsb-notification-sub-title" title="<%=self.subTitle._entityQuotes()%>"><%=self.subTitle.substr(0, 100)%></div>
+			<% } %>
+			<div class="jsb-notification-body"><%=self.body%></div>
+		</div>
+	</div>
+</noscript>
+
+<noscript id="notification-close-wrapper">
+	<div class="jsb-notification-close-wrapper">
+		<input type="button" class="jsb-notification-close <%=self.primary? 'jsb-notification-primary-close-button' : ''%>" value="<%=self.value%>" />
+		<span class="jsb-has-option jsb-hidden">⌥</span>
+	</div>
+</noscript>
+
+<noscript id="javascript-alert">
+	<p class="jsb-info"><%=self.body%></p>
+</noscript>
+
+<noscript id="first-visit">
+	<p class="jsb-info">
+		<%=_('first_visit.body', [_(self.isDomain ? 'first_visit.body.domain' : 'first_visit.body.host')])%><q></q>
+		<a href="javascript:void(0);" class="jsb-show-more"><%=_('first_visit.blocked.helpLink')%></a>
+	</p>
+</noscript>
+
+<noscript id="install-user-script-prompt">
+	<p class="jsb-info"><%=_('user_script.add_prompt')%></p>
+</noscript>
+
+<noscript id="xhr-prompt">
+	<div class="jsb-xhr-prompt">
+		<div class="jsb-info">
+			<input type="button" class="jsb-xhr-create-rule" value="<%=_('xhr.create_rule')%>" />
+		</div>
+		<%
+			var sourceOrigin = Utilities.URL.origin(self.info.source),
+					locationOrigin = Utilities.URL.origin(self.info.pageLocation);
+		%>
+		<div class="jsb-info jsb-xhr-path">
+			<div class="jsb-label jsb-bold jsb-xhr-part-label">Path</div>
+			<span class="jsb-indented"><%=((self.info.isFrame || sourceOrigin !== locationOrigin) ? Utilities.URL.origin(self.info.source)._escapeHTML() : '') + decodeURI(Utilities.URL.extractPath(self.info.source))._escapeHTML()%></span>
+		</div>
+		<% if (Utilities.typeOf(self.info.meta) === 'object' && !self.info.meta.data._isEmpty()) { %>
+		<div class="jsb-info jsb-xhr-query">
+			<div class="jsb-label jsb-bold jsb-xhr-part-label">Query</div>
+			<% for (var param in self.info.meta.data) { %>
+				<span class="jsb-indented">
+					<span class="jsb-xhr-query-view">
+						<span class="jsb-xhr-query-param" data-param="<%=encodeURIComponent(param)%>"><%=param._escapeHTML()%></span>: <span class="jsb-xhr-query-value" data-value="<%=encodeURIComponent(self.info.meta.data[param])%>"><%=self.info.meta.data[param] ? self.info.meta.data[param]._escapeHTML() : null%></span>
+					</span>
+					<span class="jsb-xhr-query-modify jsb-hidden">
+						<input type="text" class="jsb-xhr-query-param-modify" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-for="data-param" value="<%=param._entityQuotes()%>" />:
+						<input type="text" class="jsb-xhr-query-value-modify" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-for="data-value" value="<%=typeof self.info.meta.data[param] === 'string' ? self.info.meta.data[param]._entityQuotes() : self.info.meta.data[param]%>" />
+					</span>
+				</span>
+				<br />
+			<% } %>
+		</div>
+		<% } %>
+	</div>
+</noscript>
+
+<noscript id="element-placeholder">
+	<div class="jsb-injected-element jsb-element-placeholder">
+		<div class="jsb-element-placeholder-container">
+			<%
+				var kinds = {
+					'application/x-shockwave-flash': 'Flash',
+					'application/pdf': 'PDF',
+					'application/x-silverlight-app': 'Silverlight',
+					'application/x-silverlight-2': 'Silverlight',
+					'application/x-silverlight': 'Silverlight'
+				};
+			%>
+			<div class="jsb-element-placeholder-kind"><%=kinds[self.type] || self.kind%></div>
+		</div>
+	</div>
+</noscript>

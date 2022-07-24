@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+   <key>Extension Updates</key>
+   <array>
+     <dict>
+       <key>CFBundleIdentifier</key>
+       <string>com.toggleable.JavaScriptBlocker</string>
+       <key>Developer Identifier</key>
+       <string>6S8J5HV3H4</string>
+       <key>CFBundleVersion</key>
+       <string>205</string>
+       <key>CFBundleShortVersionString</key>
+       <string>4.1.24</string>
+       <key>URL</key>
+       <string>https://hero.toggleable.com/jsblocker/download/JS%20Blocker.safariextz</string>
+     </dict>
+     <dict>
+       <key>CFBundleIdentifier</key>
+       <string>com.toggleable.JavaScriptBlockerBeta</string>
+       <key>Developer Identifier</key>
+       <string>6S8J5HV3H4</string>
+       <key>CFBundleVersion</key>
+       <string>205</string>
+       <key>CFBundleShortVersionString</key>
+       <string>4.1.24</string>
+       <key>URL</key>
+       <string>https://hero.toggleable.com/jsblocker/download/JS%20BlockerBeta.safariextz</string>
+     </dict>
+     <dict>
+       <key>CFBundleIdentifier</key>
+       <string>com.toggleable.JavaScriptBlocker5</string>
+       <key>Developer Identifier</key>
+       <string>6S8J5HV3H4</string>
+       <key>CFBundleVersion</key>
+       <string>180519</string>
+       <key>CFBundleShortVersionString</key>
+       <string>5.3.1</string>
+       <key>URL</key>
+       <string>https://hero.toggleable.com/jsblocker/download/JSB5.safariextz</string>
+       <key>Update From Gallery</key>
+       <true/>
+     </dict>
+   </array>
+</dict>
+</plist>

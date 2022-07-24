@@ -1,0 +1,508 @@
+<!--
+JS Blocker 5 (http://jsblocker.toggleable.com) - Copyright 2017 Travis Lee Roman
+-->
+
+<noscript id="host-section">
+	<%
+		var isLocked = globalPage.Rules.isLocked(),
+				snapshotInUse = globalPage.Rules.snapshotInUse(),
+				useSimplePageEditor = Settings.getItem('useSimplePageEditor') && !self.forceAdvanced,
+				simplifiedUI = Settings.getItem('simplifiedUI') && Settings.getItem('blockFirstVisit') === 'nowhere',
+				allowAlwaysInPrivate = Settings.getItem('allowAlwaysInPrivate'),
+				allResourcesRules = simplifiedUI ? globalPage.Rules.list.allResources.domain(self.host)['*'] : null,
+				allResourcesAction = null;
+
+		if (simplifiedUI && allResourcesRules) {
+			allResourcesAction = allResourcesRules.get('*').action === 0 ? 'block' : 'allow';
+		}
+	%>
+
+	<div class="page-host-section <%=isLocked ? 'page-host-rules-locked' : ''%>" data-id="<%=self.id%>" data-domain="<%=self.host._entityQuotes()%>" data-disabled="<%=self.disabled ? 1 : 0%>" data-blockedFirstVisitStatus="<%=JSON.stringify(self.blockFirstVisitStatus)._entityQuotes()%>" data-private="<%=(self.private && !allowAlwaysInPrivate) ? '1' : '0'%>">
+		<div class="page-host-header floating-header">
+			<span class="page-host-type"><%=self.isFrame ? _('view.page.header.frame') : _('view.page.header.top')%></span><span class="page-host-header-divider" aria-hidden="true">│</span><span class="page-host-host jsb-light-scrollbars"><%=self.host%></span><span class="page-host-header-divider" aria-hidden="true">│</span><span class="page-host-hidden-count">0 hidden items</span>
+			<button class="page-host-edit" data-poppyMenu="edit-page" data-poppyMenuMeta="<%=self.id%>" data-cancelForceBegin="1"><span class="poppy-menu-target no-underline"><span class="poppy-menu-target-text"><%=_('view.page.host.edit')%></span></span></button>
+			<input type="button" class="page-host-create-rules" value="<%=_('view.page.host.editor.create_rules')%>" />
+			<input type="button" class="page-host-toggle-disable" value="<%=_(self.disabled ? 'view_toolbar.enable' : 'view_toolbar.disable')%>" />
+		</div>
+
+		<div class="jsb-clear-float"></div>
+
+		<div class="page-host-editor">
+			<%
+				if (self.isFrame) { %>
+					<div class="jsb-info page-host-editor-advanced <%=useSimplePageEditor ? 'jsb-hidden' : ''%>">
+						<input type="checkbox" id="page-host-editor-when-framed-<%=self.id%>" class="page-host-editor-when-framed" />
+						<label for="page-host-editor-when-framed-<%=self.id%>"><%=_('view.page.host.editor.when_framed')%></label>
+					</div><%
+				} %>
+
+			<div class="jsb-info">
+				<select class="page-host-editor-list" title="<%=_('view.page.editor.list.title')%>">
+					<% if (!self.private || allowAlwaysInPrivate) { %>
+						<option value="user"><%=_('view.page.host.editor.always')%></option><%
+					} else { %>
+						<option value="temporary" disabled="disabled"><%=_('view.page.host.editor.always_disabled')%></option><%
+					} %>
+					<option value="temporary" <%=(Settings.getItem('defaultRuleList') !== 'always' && (Settings.getItem('lastRuleWasTemporary') || Settings.getItem('defaultRuleList') === 'temporary')) ? 'selected="selected"' : ''%>><%=_('view.page.host.editor.temporarily')%></option>
+				</select><label></label>
+
+				<span class="page-host-editor-advanced <%=useSimplePageEditor ? '' : 'jsb-hidden'%>">block or allow selected items</span>
+				<a href="javascript:void(0);" class="page-host-editor-advanced page-host-editor-advanced-options jsb-smaller jsb-label <%=useSimplePageEditor ? '' : 'jsb-hidden'%>">Advanced</a>
+
+				<span class="page-host-editor-advanced <%=useSimplePageEditor ? 'jsb-hidden' : ''%>">
+					<select class="page-host-editor-kind" title="<%=_('view.page.editor.kind.title')%>">
+						<%
+							if (!self.disabled) { %>
+								<option value="block/allow"><%=_('view.page.host.editor.block_allow')%></option>
+								<option value="block"><%=_('view.page.host.editor.block')%></option>
+								<option value="allow"><%=_('view.page.host.editor.allow')%></option>
+								<option value="hide"><%=_('view.page.host.editor.hide')%></option>
+								<option value="show"><%=_('view.page.host.editor.show')%></option><%
+							} %>
+						<option value="enable"><%=_('view.page.host.editor.enable')%></option>
+						<option value="disable"><%=_('view.page.host.editor.disable')%></option>
+					</select><label></label>
+
+					<select class="page-host-editor-which-items <%=self.disabled ? 'select-single' : ''%>" title="<%=_('view.page.editor.which.title')%>">
+						<option value="<%=self.disabled ? 'jsb' : 'items-checked'%>"><%=self.disabled ? _('JSB') : _('view.page.host.editor.checked_items')%></option>
+						<%
+							if (!self.disabled) { %>
+								<option value="items-all"><%=_('view.page.host.editor.all_kinds')%></option>
+								<option value="items-of-kind"><%=_('view.page.host.editor.checked_kinds')%></option>
+								<option value="jsb" disabled="disabled"><%=_('JSB')%><%
+							} %>
+					</select><label></label>
+				</span>
+			</div>
+
+			<div class="page-host-editor-advanced <%=useSimplePageEditor ? 'jsb-hidden' : ''%>">
+				<div class="page-host-editor-kinds jsb-info">
+				<%
+					var didBreak = false,
+							kinds = globalPage.Rules.__kinds,
+							b = 0;
+
+					for (var i = 0; i < kinds.length; i++) {
+						if (kinds[i] === 'special' && !Extras.isActive())
+							continue;
+							
+						if (!['*', 'disable', 'user_script']._contains(kinds[i]) && Settings.getItem('enabledKinds', kinds[i])) {
+							b++; %>
+							<input type="checkbox" id="page-host-editor-kinds-<%=kinds[i] + self.id%>" data-kind="<%=kinds[i]%>" <%=kinds[i] !== 'special' ? 'checked="checked"' : ''%> />
+							<label for="page-host-editor-kinds-<%=kinds[i] + self.id%>"><%=_('view.page.host.kind.' + kinds[i])%></label><q></q><%
+
+							if (b > 4 && !didBreak) {
+								didBreak = true; %>
+								<br /> <%
+							}
+						}
+					} %>
+				</div>
+
+				<div class="jsb-info page-host-editor-bottom">
+					<div class="page-host-editor-where-wrapper">
+						<input type="checkbox" id="page-host-editor-where-not-<%=self.id%>" class="page-host-editor-where-not" /> <label for="page-host-editor-where-not-<%=self.id%>"><%=_('view.page.editor.not')%></label>
+						<select class="page-host-editor-where" title="<%=_('view.page.editor.where.title')%>">
+							<%
+								var defaultDomain = Settings.getItem('defaultRuleDomain'),
+										selected = 'selected="selected"',
+										isIPBasedHost = Utilities.URL.isIPBasedHost(self.host);
+							%>
+
+							<option value="domain-all" <%=defaultDomain === 'all' ? selected : ''%>><%=_('view.page.editor.on_all_domains')%></option>
+							<option value="domain-0" data-domain="<%=self.host%>" <%=(defaultDomain === 'host' || isIPBasedHost) ? selected : ''%>><%=_('view.page.editor.on_domain', [self.host])%></option>
+							<%
+								if (!isIPBasedHost) {
+									var hostParts = Utilities.URL.hostParts(self.host);
+
+									for (var i = 0; i < hostParts.length; i++) { %>
+										<option value="domain-<%=i + 1%>" data-domain=".<%=hostParts[i]%>" <%=(defaultDomain === 'domain' && i === hostParts.length - 1) ? selected : ''%>><%=_('view.page.editor.within_domain', [hostParts[i]])%></option><%
+									}
+								}
+						
+							for (var i = 0; i < self.locations.length; i++) {
+								if (self.locations[i]._startsWith('about:'))
+									continue;
+
+								var pageParts = Utilities.URL.pageParts(self.locations[i]);
+
+								if (pageParts.parts.length > 0) { %>
+									<optgroup label="<%=(pageParts.parts[1] || pageParts.parts[0])._entityQuotes()%>" data-location="<%=self.locations[i]._entityQuotes()%>"><%
+
+									for (var b = (pageParts.parts[1] ? 1 : 0); b < pageParts.parts.length; b++) { %>
+										<option value="page-<%=b%>" data-page="<%=pageParts.parts[b]._entityQuotes()%>"><%=_('view.page.editor.' + (b === pageParts.parts.length - 1 ? 'on_domain' : 'from_within_domain'), [pageParts.parts[b]._escapeHTML()])%></option><%
+									} %>
+									</optgroup><%
+								}
+							} %>
+						</select><label></label>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<%
+			if (self.frameBlocked && !self.frameBlocked.isAllowed) { %>
+				<div class="page-host-frame-blocked">
+					<p class="jsb-info"><%=_('frame_blocked')%></p>
+				</div><%
+			} %>
+
+		<%
+			if (self.blockFirstVisitStatus.blocked) { %>
+				<div class="page-host-first-visit">
+					<span class="more-info"></span>
+					<p class="jsb-info">
+						<%=_(self.blockFirstVisitStatus.action !== 8 ? 'first_visit.body' : 'first_visit.blocked.body', [_(Settings.getItem('blockFirstVisit') === 'domain' ? 'first_visit.body.domain' : 'first_visit.body.host')])%>
+					</p>
+					<p class="jsb-info jsb-align-right page-host-first-visit-buttons">
+						<% if (self.blockFirstVisitStatus.action !== 8) { %>
+							<input type="button" class="page-host-first-visit-keep-blocked jsb-color-blocked" value="<%=_('first_visit.keep_blocked')%>" /><%
+						} %>
+						<input type="button" class="page-host-first-visit-unblock jsb-color-allowed" value="<%=_('first_visit.unblock')%>" /><q></q>
+					</p>
+				</div><%
+			} %>
+
+		<% if (snapshotInUse) { %>
+			<div class="page-host-snapshot-in-use">
+			<%
+				var header;
+
+				var snapshotInfo = globalPage.Rules.list.active.snapshot,
+						comparison = snapshotInfo.comparison;
+
+				if (comparison && comparison.side === 'left')
+					header = 'snapshots.only_always';
+				else if (comparison && comparison.side === 'right')
+					header = 'snapshots.only_snapshot';
+				else if (comparison && comparison.side === 'both')
+					header = 'snapshots.in_both';
+				else
+					header = 'snapshots.snapshot';
+			%>
+				<p class="jsb-info jsb-embossed jsb-centered"><%=_(header, [snapshotInfo.name._escapeHTML()])%></p>
+			</div><%
+		}
+
+		if (self.disabled) {
+			if (self.disabled.action > -1) { %>
+				<div class="page-host-disabled">
+					<p class="jsb-info jsb-embossed jsb-centered"><%=_(self.disabledViaParent ? 'view.page.host.disabled_via_parent' : 'view.page.host.disabled')%></p>
+				</div><%
+			}
+		} else { %>
+			<div class="page-host-columns split-view" data-splitView="page-host-columns">
+				<%=Template.create('page', 'host-column', {
+					stateType: 'allowed',
+					side: 'left',
+					state: self.state.allowed || {},
+					isLocked: isLocked,
+					simplifiedUI: simplifiedUI,
+					snapshotInUse: snapshotInUse,
+					allResourcesAction: allResourcesAction,
+					private: self.private
+				}, null, true)%>
+				<%=Template.create('page', 'host-column', {
+					stateType: 'blocked',
+					side: 'right',
+					state: self.state.blocked || {},
+					isLocked: isLocked,
+					simplifiedUI: simplifiedUI,
+					snapshotInUse: snapshotInUse,
+					allResourcesAction: allResourcesAction,
+					private: self.private
+				}, null, true)%>
+			</div>
+
+			<% if (self.state.unblocked) {
+				var unblockedKeys = Object.keys(self.state.unblocked);
+
+				unblockedKeys._remove(unblockedKeys.indexOf('script'));
+
+				if (Settings.getItem('showUnblockedScripts') || unblockedKeys.length) { %>
+					<%=Template.create('page', 'host-unblocked', {
+						stateType: 'unblocked',
+						state: self.state.unblocked
+					}, null, true)%><%
+				}
+			}
+		} %>
+	</div>
+</noscript>
+
+<noscript id="host-column">
+	<div class="page-host-column page-host-column-<%=self.stateType%> split-view-<%=self.side%>" data-state="<%=self.stateType%>">
+		<%=Template.create('page', 'host-items-container-header', self, null, true)%>
+		<%=Template.create('page', 'host-items-container', self, null, true)%>
+	</div>
+</noscript>
+
+<noscript id="host-items-container-header">
+	<div class="page-host-items-container-header" data-expander="<%=self.stateType%>ItemsContainer">
+		<span>
+			<label class="jsb-color-<%=self.stateType%>"><%=_('view.page.host.column.' + self.stateType)%></label>
+			<%
+				var pageLocation,
+						items;
+
+				var	itemCount = 0;
+
+				for (var kind in self.state) {
+					if (self.stateType === 'unblocked' && kind === 'script' && !Settings.getItem('showUnblockedScripts'))
+						continue;
+
+					if (globalPage.Rules.kindShouldBadge(kind)) {
+						if (self.stateType === 'unblocked' || (Settings.getItem('showResourceURLs') || Settings.getItem('temporarilyShowResourceURLs'))) {
+							if (self.state[kind].source) {
+								items = [];
+
+								for (pageLocation in self.state[kind].source) {
+									items._pushAll(Object.keys(self.state[kind].source[pageLocation]));
+								}
+
+								itemCount += items._unique().length;
+							}
+						} else if (self.state[kind].hosts) {
+							itemCount += Object.keys(self.state[kind].hosts).length;
+						}
+					}
+				}
+			%>
+			<span class="page-host-state-count"><%=itemCount%></span>
+			<span class="page-host-state-count-type"><% if (self.stateType === 'unblocked' || (Settings.getItem('showResourceURLs') || Settings.getItem('temporarilyShowResourceURLs'))) { %><%=_('view.page.host.count_type.item'._pluralize(itemCount))%><% } else { %><%=_('view.page.host.count_type.host'._pluralize(itemCount))%><% } %></span>
+		</span>
+
+		<% if (!self.isLocked && self.simplifiedUI && self.stateType !== 'unblocked' && !self.snapshotInUse) { 
+			if (!((self.allResourcesAction === 'block' && self.stateType === 'allowed') || (self.allResourcesAction === 'allow' && self.stateType === 'blocked'))) { %>
+				<input type="button" class="page-host-items-quick-action jsb-color-<%=self.stateType === 'blocked' ? 'allowed' : 'blocked'%>" value="<%=_(self.stateType === 'blocked' ? 'view.page.host.quick_allow' : 'view.page.host.quick_block')%>"/><%
+			}
+		} %>
+
+	</div>
+</noscript>
+
+<noscript id="host-items-container">
+	<div class="page-host-items-container" data-stateType="<%=self.stateType%>">
+		<% 		
+			var kindArray = Object.keys(self.state)._sortUsingArray(globalPage.Rules.__kinds),
+					showItemDescription = Settings.getItem('showItemDescription'),
+					showHiddenItems = Settings.getItem('showHiddenItems'),
+					showResourceURLs = Settings.getItem('showResourceURLs') || Settings.getItem('temporarilyShowResourceURLs'),
+					allowAlwaysInPrivate = Settings.getItem('allowAlwaysInPrivate'),
+					createRulesOnClick = Settings.getItem('createRulesOnClick'),
+					createTemporaryRules = (self.private && !allowAlwaysInPrivate) || ((Settings.getItem('defaultRuleList') !== 'always' && (Settings.getItem('lastRuleWasTemporary') || Settings.getItem('defaultRuleList') === 'temporary'))),
+					actionGroup = {},
+					hiddenCount = 0;
+
+			for (var i = 0; i < kindArray.length; i++) {
+				var kind = kindArray[i],
+						shouldBadge = globalPage.Rules.kindShouldBadge(kind),
+						actionGroup = {},
+						expander = self.stateType + 'PageHostKind' + kind;
+
+				if (self.stateType === 'unblocked' && kind === 'script' && !Settings.getItem('showUnblockedScripts'))
+					continue;
+				%>
+
+				<header class="page-host-kind" data-expander="<%=expander%>">
+					<h4 data-cancelForceBegin="1"><input type="checkbox" class="page-host-kind-select-all" title="<%=_('view.page.host.click_to_select_all')%>" /><%=_('view.page.host.kind.' + kind )%></h4>
+				</header>
+
+				<ul class="page-host-items" data-kind="<%=kind%>">
+					<%
+						for (var pageLocation in self.state[kind].source) {
+							for (var source in self.state[kind].source[pageLocation]) {
+								var sourceInfo = self.state[kind].source[pageLocation][source],
+										protocol = Utilities.URL.protocol(source);
+
+								for (var resourceID in sourceInfo) {
+									var resource = sourceInfo[resourceID];
+
+									actionGroup
+										._getWithDefault(resource.action, {})
+										._getWithDefault(resource.sourceIsURL && protocol ? protocol : 'none:', {})
+										._getWithDefault((resource.sourceIsURL && !showResourceURLs) || protocol === 'blob:' ? resource.sourceHost : resource.fullSource, [])
+										.push({
+											resourceID: resourceID,
+											resource: resource
+										});
+								}
+							}
+						}
+
+						for (var action in actionGroup) {
+							var disableEdit = action === '-11' ? 'disabled="disabled"' : '';
+
+							for (var protocol in actionGroup[action]) {
+								for (var source in actionGroup[action][protocol]) {
+									var resources = actionGroup[action][protocol][source],
+											resource = resources[0].resource,
+											groupHiddenCount = 0,
+											resourceDescriptions = [];
+
+									var resourceIDs = resources.map(function (value, i) {
+										if (value.resource.shouldHide())
+											groupHiddenCount++;
+
+										if (value.resource.sourceIsURL && showItemDescription && self.stateType !== 'unblocked' && ['http:', 'https:', 'ftp:']._contains(protocol)) {
+											var descriptions = value.resource.descriptionsForResource();
+
+											if (descriptions.length)
+												resourceDescriptions = resourceDescriptions.concat(descriptions);
+										}
+
+										return value.resourceID;
+									});
+
+									var isHidden = groupHiddenCount === resourceIDs.length;
+
+									if (isHidden && !showHiddenItems) {
+										hiddenCount++;
+
+										continue;
+									}
+
+									resourceDescriptions = resourceDescriptions.filter(function (value, i) {
+										return value !== null;
+									})._unique();
+
+									var sourceName = source;
+
+									if (kind === 'user_script') {
+										try {
+											sourceName = globalPage.UserScript.getAttribute(source, 'meta').name;
+										} catch (error) {
+											sourceName = 'DELETED - ' + source;
+										}
+									} else if (kind === 'special') {
+										var localizationKey = 'special.' + source + '.' + self.stateType;
+
+										sourceName = _(localizationKey, [globalPage.Special.enabled[source] ? globalPage.Special.enabled[source].value : '']);
+
+										if (Strings.localizationExist(localizationKey + '.description')) {
+											resourceDescriptions = [_(localizationKey + '.description')];
+										}
+									}
+
+									var hasOptions = shouldBadge && !showResourceURLs && protocol !== 'none:',
+											useSelect = hasOptions || !shouldBadge || protocol === 'blob:';
+
+									if (self.stateType === 'unblocked' && kind === 'script') {
+										sourceName = sourceName.substr(0, 300);
+									}
+
+									if (protocol === 'data:') {
+										sourceName = sourceName.substr(0, 300);
+									}
+								%>
+
+									<li
+										class="page-host-item page-host-item-select<%=(hasOptions || !shouldBadge) ? '' : '-custom'%> <%=isHidden ? ' page-host-item-rule-hidden' : ''%>"
+										data-resourceIDs="<%=JSON.stringify(resourceIDs)._entityQuotes()%>"
+										data-host="<%=resource.sourceHost._entityQuotes()%>"
+										data-protocol="<%=protocol%>"
+										data-action="<%=action%>"
+										data-source="<%=source._entityQuotes()%>"
+									>
+										<% if (self.stateType !== 'unblocked') { %>
+											<div class="page-host-item-edit-container">
+												<div class="page-host-item-edit-check-wrapper">
+													<input <%=disableEdit%> type="checkbox" class="page-host-item-edit-check" title="<%=_('view.page.editor.check_to_' + (self.stateType === 'blocked' ? 'allow' : 'block'))%>" />
+												</div>
+												<div class="page-host-item-edit-select-wrapper">
+												<%
+													if (useSelect) { %>
+														<select <%=disableEdit%> class="page-host-item-edit-select blend-in <%=hasOptions ? '' : 'select-single'%>"><%
+
+														var sourceDomain,
+																displaySource;
+
+														var sourceDomains = Utilities.URL.hostParts(source, true);
+
+														for (var b = 0; b < sourceDomains.length; b++) {
+															sourceDomain = b === 0 ? sourceDomains[b] : sourceDomains[b].substr(1);
+
+															if (b === 0)
+																displaySource = kind._startsWith('xhr') ? 'view.page.editor.to_domain' : 'view.page.editor.from_domain';
+															else
+																displaySource = kind._startsWith('xhr') ? 'view.page.editor.to_within_domain' : 'view.page.editor.from_within_domain';%>
+
+															<option value="<%=sourceDomains[b]._entityQuotes()%>"><%=shouldBadge ? _(displaySource, [sourceDomain._escapeHTML()]) : sourceName._escapeHTML()%></option><%
+														} %>
+
+														</select><label></label><%
+													} else { %>
+														<textarea <%=disableEdit%> class="render-as-input select-custom-input jsb-light-scrollbars" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" wrap="off" rows="0" title="<%=_('view.page.editor.resource_url', [source._entityQuotes()])%>"></textarea>
+														<select <%=disableEdit%> class="page-host-item-edit-select">
+														<%
+															var sourceParts = Utilities.URL.pageParts(source),
+																	index = sourceParts.parts.length - 1;
+
+															if (sourceParts.search.length) { %>
+																<option value="^<%=sourceParts.parts[index]._escapeRegExp()._entityQuotes()%><%=sourceParts.search._escapeRegExp()._entityQuotes()%>$"><%=sourceParts.parts[index]._escapeHTML()%><%=sourceParts.search._escapeHTML()%></option>
+																<option value="^<%=sourceParts.parts[index]._escapeRegExp()._entityQuotes()%>\\?.*$"><%=sourceParts.parts[index]._escapeHTML()%>?</option><%
+
+																index -= 1;
+															}
+
+															for (var c = index + 1; c--;) { %>
+																<option value="^<%=sourceParts.parts[c]._escapeRegExp()._entityQuotes()%><%=c < sourceParts.parts.length - 1 ? '.*' : ''%>$"><%=sourceParts.parts[c]._escapeHTML()%></option><%
+															} %>
+														</select><label></label><%
+													} %>
+												</div>
+											</div><%
+										} %>
+
+										<div class="page-host-item-description" data-cancelForceBegin="1">
+											<% if (resourceDescriptions.length) { %>
+												<p class="jsb-info jsb-light-scrollbars"><%=resourceDescriptions.join(', ')%></p><%
+											} %>
+										</div>
+
+										<div class="page-host-item-container">
+											<% if (self.stateType !== 'unblocked' || kind !== 'script') { %>
+												<span class="page-host-item-info more-info" data-forceTriggersClick="1"></span><%
+											} %>
+											<span class="page-host-item-source-container jsb-light-scrollbars">
+												<span data-cancelForceBegin="1" class="page-host-item-source <%=resourceDescriptions.length ? 'page-host-item-source-has-description' : ''%>" title="<%=_(createRulesOnClick ? 'view.page.host.click_to_create_rule' : 'view.page.host.click_to_edit')%>"><%=$.trim(sourceName._escapeHTML().replace(/([\n\t]|  +)/g, ' '))%></span>
+											</span>
+											<% if (shouldBadge) { %>
+												<span class="page-host-host-count-container">
+													<a data-cancelForceBegin="1" href="javascript:void(0);" class="page-host-host-count" title="<%=_('view.page.items.view_resource_urls')%>"><%=resourceIDs.length%></a>
+												</span><%
+											} %>
+										</div>
+
+										<div class="page-host-item-will-create-rule" data-cancelForceBegin="1">
+											<p class="jsb-info jsb-light-scrollbars"><%=_('view.page.host.item.will_' + (self.stateType === 'blocked' ? 'allow' : 'block') + (createTemporaryRules ? '.temporarily' : '.always'))%></p>
+										</div>
+									</li>
+								<%
+								}
+							}
+						}
+					%>
+				</ul>
+		<% } %>
+		<input type="hidden" class="page-host-items-hidden" value="<%=hiddenCount%>">
+	</div>
+</noscript>
+
+<noscript id="host-unblocked">
+	<div class="page-host-unblocked">
+		<%=Template.create('page', 'host-items-container-header', self, null, true)%>
+		<%=Template.create('page', 'host-items-container', self, null, true)%>
+	</div>
+</noscript>
+
+<noscript id="modal-info">
+	<p class="jsb-info jsb-centered jsb-embossed"><%=self.info%></p>
+</noscript>
+
+<noscript id="resource-image">
+	<div id="resource-image" class="loading" data-i18n-loading="<%=_('view.page.item.info.loading')%>">
+		<img src="<%=self.url._entityQuotes()%>">
+	</div>
+</noscript>
